@@ -40,7 +40,8 @@ for (const { target, os, cpu } of platforms) {
   mkdirSync(join(dir, "bin"), { recursive: true });
   mkdirSync(unpacked, { recursive: true });
   const source = relative(unpacked, archive);
-  if (windows) execFileSync("unzip", ["-q", source], { cwd: unpacked });
+  if (process.platform === "win32") execFileSync(join(process.env.SystemRoot, "System32", "tar.exe"), ["-xf", source], { cwd: unpacked });
+  else if (windows) execFileSync("unzip", ["-q", source], { cwd: unpacked });
   else execFileSync("tar", ["-xzf", source], { cwd: unpacked });
   const binary = windows ? "opensd.exe" : "opensd";
   copyFileSync(join(unpacked, binary), join(dir, "bin", binary));

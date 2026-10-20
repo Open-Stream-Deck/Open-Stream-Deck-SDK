@@ -132,7 +132,7 @@ opensd::export!(Hello);
 | [Безопасность](https://wiki.opensd.dev/docs/sdk/security) | Модель угроз и границы гарантий |
 | [Миграция](https://wiki.opensd.dev/docs/sdk/migration) | Переход с SDK 0.2, Elgato и StreamDock |
 
-Справка по API крейта `opensd` публикуется на [docs.rs](https://docs.rs/opensd). Порядок выпуска новой версии описан в [RELEASING.md](RELEASING.md).
+Справка по API крейта `opensd` публикуется на [docs.rs](https://docs.rs/opensd).
 
 ## Разработка
 
