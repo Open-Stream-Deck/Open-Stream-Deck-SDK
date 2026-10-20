@@ -73,5 +73,5 @@ jobs:
         run: |
           opensd new "$RUNNER_TEMP/ts-demo" --lang ts
           cd "$RUNNER_TEMP/ts-demo"
-          npm pkg delete devDependencies.opensd
+          node -e 'const f="package.json",p=require("./"+f);delete p.devDependencies["@opensd/cli"];require("fs").writeFileSync(f,JSON.stringify(p,null,2))'
           npm install && npx tsc --noEmit && opensd pack
