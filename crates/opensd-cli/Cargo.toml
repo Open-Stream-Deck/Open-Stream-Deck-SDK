@@ -1,0 +1,36 @@
+[package]
+name = "opensd-cli"
+description = "Создание, сборка, проверка и упаковка плагинов Open Stream Deck"
+readme = "README.md"
+keywords = ["opensd", "stream-deck", "plugin", "cli", "wasm"]
+categories = ["command-line-utilities", "development-tools", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://wiki.opensd.dev/docs/sdk/cli"
+
+[[bin]]
+name = "opensd"
+path = "src/main.rs"
+doc = false
+
+[dependencies]
+opensd-package.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+toml = { version = "0.8", default-features = false, features = ["parse"] }
+
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/opensd-{ target }{ archive-suffix }"
+bin-dir = "opensd{ binary-ext }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+
+[package.metadata.binstall.overrides.aarch64-pc-windows-msvc]
+pkg-fmt = "zip"

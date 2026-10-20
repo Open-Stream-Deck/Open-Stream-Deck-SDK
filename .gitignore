@@ -1,0 +1,7 @@
+/target/
+**/target/
+/dist/
+/npm/dist/
+node_modules/
+**/.opensd/
+*.opensd

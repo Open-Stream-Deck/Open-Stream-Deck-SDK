@@ -1,0 +1,30 @@
+{
+  "name": "opensd",
+  "version": "1.0.0",
+  "description": "Создание, сборка, проверка и упаковка плагинов Open Stream Deck",
+  "keywords": ["opensd", "open-stream-deck", "stream-deck", "plugin", "macropad"],
+  "homepage": "https://wiki.opensd.dev/docs/sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Open-Stream-Deck/Open-Stream-Deck-SDK.git",
+    "directory": "npm/opensd"
+  },
+  "license": "MIT OR Apache-2.0",
+  "author": "whxtelxs",
+  "bin": {
+    "opensd": "bin/opensd.js"
+  },
+  "types": "types/opensd.d.ts",
+  "files": ["bin", "types", "README.md", "LICENSE-MIT", "LICENSE-APACHE"],
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "@opensd/cli-darwin-arm64": "1.0.0",
+    "@opensd/cli-darwin-x64": "1.0.0",
+    "@opensd/cli-linux-arm64": "1.0.0",
+    "@opensd/cli-linux-x64": "1.0.0",
+    "@opensd/cli-win32-arm64": "1.0.0",
+    "@opensd/cli-win32-x64": "1.0.0"
+  }
+}

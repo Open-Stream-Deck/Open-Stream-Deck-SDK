@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo doc --workspace --no-deps
+        env:
+          RUSTDOCFLAGS: -D warnings
+
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace
+      - run: cargo build -p opensd --target wasm32-unknown-unknown --release
+
+  msrv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.88
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo check --workspace
+
+  templates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: cargo install --path crates/opensd-cli --locked
+      - name: Rust template packs
+        run: |
+          opensd new "$RUNNER_TEMP/rust-demo" --lang rust --sdk-path .
+          cd "$RUNNER_TEMP/rust-demo" && cargo test && opensd pack && opensd inspect dist/*.opensd
+      - name: JavaScript template packs
+        run: |
+          opensd new "$RUNNER_TEMP/js-demo" --lang js
+          cd "$RUNNER_TEMP/js-demo" && opensd pack && opensd check dist/*.opensd
+      - name: TypeScript template packs
+        run: |
+          opensd new "$RUNNER_TEMP/ts-demo" --lang ts
+          cd "$RUNNER_TEMP/ts-demo"
+          npm pkg delete devDependencies.opensd
+          npm install && npx tsc --noEmit && opensd pack

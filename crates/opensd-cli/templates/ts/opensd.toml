@@ -1,0 +1,11 @@
+sdk = 1
+id = "{{id}}"
+name = "{{name}}"
+version = "0.1.0"
+author = "{{author}}"
+description = "A plugin for Open Stream Deck"
+icon = "assets/icon.svg"
+
+[runtime]
+type = "js"
+main = "plugin.js"

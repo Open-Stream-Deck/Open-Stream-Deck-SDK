@@ -1,0 +1,21 @@
+
+[[actions]]
+id = "{{id}}.counter"
+name = "Counter"
+description = "Tap to count, hold to reset"
+icon = "assets/key.svg"
+controllers = ["key"]
+settings = { count = 0, step = 1 }
+title = { align = "bottom", size = 16 }
+gestures = { long_press = 600 }
+
+[[actions.fields]]
+id = "step"
+label = "Step"
+type = "number"
+min = 1
+max = 100
+default = 1
+
+[[actions.states]]
+image = "assets/key.svg"

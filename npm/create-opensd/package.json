@@ -1,0 +1,24 @@
+{
+  "name": "create-opensd",
+  "version": "1.0.0",
+  "description": "Создание плагина Open Stream Deck: npm create opensd@latest",
+  "keywords": ["opensd", "open-stream-deck", "stream-deck", "plugin", "create"],
+  "homepage": "https://wiki.opensd.dev/docs/sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Open-Stream-Deck/Open-Stream-Deck-SDK.git",
+    "directory": "npm/create-opensd"
+  },
+  "license": "MIT OR Apache-2.0",
+  "author": "whxtelxs",
+  "bin": {
+    "create-opensd": "index.js"
+  },
+  "files": ["index.js", "README.md", "LICENSE-MIT", "LICENSE-APACHE"],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "opensd": "1.0.0"
+  }
+}

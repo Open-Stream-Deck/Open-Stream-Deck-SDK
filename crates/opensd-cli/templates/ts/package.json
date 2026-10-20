@@ -1,0 +1,16 @@
+{
+  "name": "{{package}}",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "build": "esbuild src/plugin.ts --bundle --format=iife --target=es2022 --outfile=plugin.js",
+    "typecheck": "tsc --noEmit",
+    "dev": "opensd dev",
+    "pack": "opensd pack"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "opensd": "^1.0.0",
+    "typescript": "^5.8.0"
+  }
+}

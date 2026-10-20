@@ -1,0 +1,17 @@
+[package]
+name = "opensd"
+description = "Rust SDK для плагинов Open Stream Deck"
+readme = "README.md"
+keywords = ["stream-deck", "macropad", "plugin", "wasm", "sdk"]
+categories = ["api-bindings", "wasm"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
