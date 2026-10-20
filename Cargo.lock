@@ -152,7 +152,7 @@ dependencies = [
 
 [[package]]
 name = "opensd"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "serde",
  "serde_json",
@@ -160,7 +160,7 @@ dependencies = [
 
 [[package]]
 name = "opensd-cli"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "opensd-package",
  "serde",
@@ -170,7 +170,7 @@ dependencies = [
 
 [[package]]
 name = "opensd-package"
-version = "1.0.0"
+version = "1.0.1"
 dependencies = [
  "serde",
  "serde_json",

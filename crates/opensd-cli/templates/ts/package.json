@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.0",
-    "opensd": "^1.0.0",
+    "@opensd/cli": "^1.0.1",
     "typescript": "^5.8.0"
   }
 }

@@ -4,7 +4,7 @@ SDK для плагинов Open Stream Deck. Плагин пишется на R
 
 [![crates.io](https://img.shields.io/crates/v/opensd.svg)](https://crates.io/crates/opensd)
 [![docs.rs](https://img.shields.io/docsrs/opensd)](https://docs.rs/opensd)
-[![npm](https://img.shields.io/npm/v/opensd.svg)](https://www.npmjs.com/package/opensd)
+[![npm](https://img.shields.io/npm/v/@opensd/cli.svg)](https://www.npmjs.com/package/@opensd/cli)
 [![docs](https://img.shields.io/badge/docs-wiki.opensd.dev-blue)](https://wiki.opensd.dev/docs/sdk)
 [![CI](https://github.com/Open-Stream-Deck/Open-Stream-Deck-SDK/actions/workflows/ci.yml/badge.svg)](https://github.com/Open-Stream-Deck/Open-Stream-Deck-SDK/actions/workflows/ci.yml)
 
@@ -39,7 +39,7 @@ cargo binstall opensd-cli
 Через npm, для проектов на JavaScript и TypeScript:
 
 ```bash
-npm create opensd@latest my-plugin
+npm create @opensd my-plugin
 ```
 
 Архивы для всех платформ и файл `SHA256SUMS` лежат в [релизах](https://github.com/Open-Stream-Deck/Open-Stream-Deck-SDK/releases).
@@ -113,7 +113,7 @@ opensd::export!(Hello);
 | `crates/opensd` | Rust SDK для плагинов, крейт [`opensd`](https://crates.io/crates/opensd) |
 | `crates/opensd-package` | Формат `.opensd`: манифест, проверка, упаковка. Общий для CLI и приложения |
 | `crates/opensd-cli` | CLI `opensd`, шаблоны проектов и типы JS API |
-| `npm/` | Пакеты `opensd` и `create-opensd` для npm |
+| `npm/` | Пакеты `@opensd/cli` и `@opensd/create` для npm |
 | `install.sh`, `install.ps1` | Установка готового бинарника |
 
 ## Документация

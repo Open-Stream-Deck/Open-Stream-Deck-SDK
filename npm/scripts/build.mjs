@@ -48,7 +48,7 @@ for (const { target, os, cpu } of platforms) {
   chmodSync(join(dir, "bin", binary), 0o755);
   rmSync(unpacked, { recursive: true });
   withLicenses(dir);
-  writeFileSync(join(dir, "README.md"), `# @opensd/cli-${os}-${cpu}\n\nБинарник \`opensd\` для ${os} ${cpu}. Устанавливайте пакет [opensd](https://www.npmjs.com/package/opensd): он подтянет нужный бинарник сам.\n`);
+  writeFileSync(join(dir, "README.md"), `# @opensd/cli-${os}-${cpu}\n\nБинарник \`opensd\` для ${os} ${cpu}. Устанавливайте пакет [@opensd/cli](https://www.npmjs.com/package/@opensd/cli): он подтянет нужный бинарник сам.\n`);
   write(join(dir, "package.json"), {
     name: `@opensd/cli-${os}-${cpu}`,
     version,
@@ -62,8 +62,8 @@ for (const { target, os, cpu } of platforms) {
   });
 }
 
-const cli = join(out, "opensd");
-cpSync(join(npm, "opensd"), cli, { recursive: true });
+const cli = join(out, "cli");
+cpSync(join(npm, "cli"), cli, { recursive: true });
 cpSync(join(root, "crates/opensd-cli/types"), join(cli, "types"), { recursive: true });
 withLicenses(cli);
 const cliPackage = json(join(cli, "package.json"));
@@ -71,12 +71,12 @@ cliPackage.version = version;
 for (const name of Object.keys(cliPackage.optionalDependencies)) cliPackage.optionalDependencies[name] = version;
 write(join(cli, "package.json"), cliPackage);
 
-const create = join(out, "create-opensd");
-cpSync(join(npm, "create-opensd"), create, { recursive: true });
+const create = join(out, "create");
+cpSync(join(npm, "create"), create, { recursive: true });
 withLicenses(create);
 const createPackage = json(join(create, "package.json"));
 createPackage.version = version;
-createPackage.dependencies.opensd = version;
+createPackage.dependencies["@opensd/cli"] = version;
 write(join(create, "package.json"), createPackage);
 
 console.log(`npm packages ${version} are in ${out}`);

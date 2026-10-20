@@ -7,8 +7,8 @@ const out = join(resolve(dirname(fileURLToPath(import.meta.url)), ".."), "dist")
 const npm = process.platform === "win32" ? "npm.cmd" : "npm";
 const order = [
   ...readdirSync(out).filter((name) => name.startsWith("cli-")),
-  "opensd",
-  "create-opensd",
+  "cli",
+  "create",
 ];
 
 for (const folder of order) {

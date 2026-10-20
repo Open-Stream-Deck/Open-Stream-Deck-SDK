@@ -1,9 +1,9 @@
-# opensd
+# @opensd/cli
 
-Утилита плагинов Open Stream Deck для проектов на JavaScript и TypeScript.
+Утилита `opensd` для плагинов Open Stream Deck в проектах на JavaScript и TypeScript.
 
 ```bash
-npm create opensd@latest my-plugin
+npm create @opensd my-plugin
 cd my-plugin
 npm install
 npx opensd dev
@@ -12,8 +12,15 @@ npx opensd dev
 Или в существующем проекте:
 
 ```bash
-npm install --save-dev opensd
+npm install --save-dev @opensd/cli
 npx opensd pack
+```
+
+Глобально:
+
+```bash
+npm install -g @opensd/cli
+opensd new my-plugin
 ```
 
 Пакет ставит готовый бинарник `opensd` для Windows, macOS или Linux и содержит типы API плагина: `types/opensd.d.ts` и `types/inspector.d.ts`.

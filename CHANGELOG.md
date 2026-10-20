@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- Пакеты npm переименованы: `opensd` стал `@opensd/cli`, `create-opensd` стал `@opensd/create`. Новый проект: `npm create @opensd my-plugin`. Под старыми именами пакеты не публиковались.
+- Шаблон TypeScript ставит `@opensd/cli`.
+- Скрипт сборки npm-пакетов работает на Windows.
+
 ## 1.0.0
 
 Первый стабильный выпуск SDK.
@@ -12,4 +18,4 @@
 - Разрешения `loopback`, `network`, `clipboard`, `launch` с согласием пользователя, привязанным к дайджесту запроса.
 - Крейт `opensd` с типизированными событиями, `Host`, `Commands` и тестовым стендом `testing::Harness`.
 - CLI `opensd`: `new`, `build`, `pack`, `check`, `inspect`, `dev`, `clean`. Общий кеш сборки для всех Rust-плагинов.
-- Пакеты npm `opensd` и `create-opensd`, готовые бинарники для Windows, macOS и Linux, установка одной командой.
+- Пакеты npm, готовые бинарники для Windows, macOS и Linux, установка одной командой.
