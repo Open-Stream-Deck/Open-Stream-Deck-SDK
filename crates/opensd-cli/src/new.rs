@@ -83,7 +83,7 @@ pub fn create(dir: &Path, options: Options) -> Result {
     }
     let next = match options.lang.as_str() {
         "rust" | "rs" => "rustup target add wasm32-unknown-unknown, then opensd dev",
-        "ts" | "typescript" => "npm install, then opensd dev",
+        "ts" | "typescript" => "npm install, then npm run dev",
         _ => "opensd dev",
     };
     println!(

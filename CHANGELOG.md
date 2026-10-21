@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- `opensd new --lang ts` подсказывает `npm run dev` вместо `opensd dev`: без глобальной установки CLI команда `opensd` в проекте не находится.
+
 ## 1.0.1
 
 - Пакеты npm переименованы: `opensd` стал `@opensd/cli`, `create-opensd` стал `@opensd/create`. Новый проект: `npm create @opensd my-plugin`. Под старыми именами пакеты не публиковались.
