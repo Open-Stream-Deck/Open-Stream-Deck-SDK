@@ -104,7 +104,12 @@ fn run(args: &[String]) -> Result {
         }
         "build" => {
             let project = project::Project::open(&cwd)?;
-            let stage = project.stage(!flag(rest, "debug"))?;
+            let build = if flag(rest, "debug") {
+                project::Build::Debug
+            } else {
+                project::Build::Release
+            };
+            let stage = project.stage(build)?;
             project.prune_stages(&stage);
             println!(
                 "Staged {} {} in {}",

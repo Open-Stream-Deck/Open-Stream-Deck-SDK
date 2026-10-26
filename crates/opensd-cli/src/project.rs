@@ -15,6 +15,31 @@ const SKIP: [&str; 6] = [
     ".DS_Store",
 ];
 
+#[derive(Clone, Copy, PartialEq)]
+pub enum Build {
+    Debug,
+    Dev,
+    Release,
+}
+
+impl Build {
+    fn profile(self) -> &'static str {
+        match self {
+            Build::Debug => "debug",
+            Build::Dev => "opensd-dev",
+            Build::Release => "release",
+        }
+    }
+}
+
+const DEV_PROFILE: [&str; 5] = [
+    "profile.opensd-dev.inherits=\"release\"",
+    "profile.opensd-dev.opt-level=1",
+    "profile.opensd-dev.lto=false",
+    "profile.opensd-dev.codegen-units=256",
+    "profile.opensd-dev.incremental=true",
+];
+
 pub struct Project {
     pub root: PathBuf,
     pub manifest: Manifest,
@@ -47,18 +72,18 @@ impl Project {
         Ok(())
     }
 
-    pub fn files(&self, release: bool) -> Result<BTreeMap<String, Vec<u8>>> {
+    pub fn files(&self, build: Build) -> Result<BTreeMap<String, Vec<u8>>> {
         let mut files = self.resources()?;
         let code = match self.manifest.runtime.kind {
-            RuntimeKind::Wasm => self.build_rust(release)?,
+            RuntimeKind::Wasm => self.build_rust(build)?,
             RuntimeKind::Js => self.build_js()?,
         };
         files.insert(self.manifest.runtime.main.clone(), code);
         Ok(files)
     }
 
-    pub fn stage(&self, release: bool) -> Result<PathBuf> {
-        let mut files = self.files(release)?;
+    pub fn stage(&self, build: Build) -> Result<PathBuf> {
+        let mut files = self.files(build)?;
         if self.manifest.runtime.kind == RuntimeKind::Wasm {
             let main = &self.manifest.runtime.main;
             let prepared =
@@ -104,7 +129,7 @@ impl Project {
     }
 
     pub fn pack(&self, out: Option<PathBuf>) -> Result {
-        let files = self.files(true)?;
+        let files = self.files(Build::Release)?;
         let bytes = opensd_package::build(&self.manifest, files).map_err(|e| e.to_string())?;
         let out = out.unwrap_or_else(|| {
             self.root.join("dist").join(format!(
@@ -154,14 +179,23 @@ impl Project {
         Ok(files)
     }
 
-    fn build_rust(&self, release: bool) -> Result<Vec<u8>> {
+    fn build_rust(&self, build: Build) -> Result<Vec<u8>> {
         let target_dir = shared_target();
-        let mut build = cargo(&self.root, target_dir.as_deref());
-        build.args(["build", "--lib", "--target", "wasm32-unknown-unknown"]);
-        if release {
-            build.arg("--release");
+        let mut command = cargo(&self.root, target_dir.as_deref());
+        command.args(["build", "--lib", "--target", "wasm32-unknown-unknown"]);
+        match build {
+            Build::Debug => {}
+            Build::Release => {
+                command.arg("--release").env("CARGO_INCREMENTAL", "0");
+            }
+            Build::Dev => {
+                command.args(["--profile", build.profile()]);
+                for setting in DEV_PROFILE {
+                    command.args(["--config", setting]);
+                }
+            }
         }
-        let status = build
+        let status = command
             .status()
             .map_err(|e| format!("Cannot run cargo: {e}"))?;
         if !status.success() {
@@ -209,7 +243,7 @@ impl Project {
             .ok_or("cargo metadata has no target directory")?;
         let wasm = Path::new(target)
             .join("wasm32-unknown-unknown")
-            .join(if release { "release" } else { "debug" })
+            .join(build.profile())
             .join(format!("{name}.wasm"));
         fs::read(&wasm).map_err(|e| format!("{}: {e}", wasm.display()))
     }
@@ -243,7 +277,6 @@ fn cargo(root: &Path, target_dir: Option<&Path>) -> Command {
     if let Some(dir) = target_dir {
         command.env("CARGO_TARGET_DIR", dir);
     }
-    command.env("CARGO_INCREMENTAL", "0");
     command
 }
 

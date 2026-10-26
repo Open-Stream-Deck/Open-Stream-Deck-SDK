@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0
+
+Новые возможности требуют приложения, собранного с `opensd-package` 1.1.0. Плагин с разрешениями `keyboard` или `navigation` не установится в старое приложение: манифест не пройдёт проверку.
+
+- Разрешение `keyboard`: `hotkey`, `key_down`, `key_up`, `type_text` в Rust и `opensd.keyboard` в JavaScript. Сочетания пишутся как `Ctrl + Shift + M` или `ctrl+shift+m`, буквы нажимаются по положению клавиши при любой раскладке, удержанные клавиши хост отпускает при остановке плагина.
+- Разрешение `navigation`: `switch_profile`, `switch_page` и `opensd.switchProfile`, `opensd.switchPage`. Событие `navigation` с текущим профилем и страницей приходит после `init` и при каждой смене, `Host::navigation()` и `opensd.navigation` хранят последнее.
+- `app_watch`, `app_unwatch` и `opensd.app.watch`: статус объявленной программы сразу и при каждом её запуске или закрытии.
+- Событие `systemWake` после выхода компьютера из сна.
+- `set_image` и `setImage` принимают адрес `http(s)://`, разрешённый `loopback` или `network`: картинку скачивает и кэширует приложение.
+- `ws_open` и `opensd.ws` к адресам из `network` идут через брокер приложения, без CORS и заголовка `Origin`.
+- `Request::binary()` в Rust и `binary` в `opensd.http`: тело ответа приходит в base64. Нужна версия приложения, которая проводит `network` через брокер.
+- `opensd dev` собирает Rust-плагин профилем `opensd-dev` без LTO и с инкрементальным кешем, пересборка после сохранения в разы быстрее.
+- `opensd dev` дочитывает журнал плагина с последней позиции, а не перечитывает файл целиком.
+
 ## 1.0.2
 
 - `opensd new --lang ts` подсказывает `npm run dev` вместо `opensd dev`: без глобальной установки CLI команда `opensd` в проекте не находится.

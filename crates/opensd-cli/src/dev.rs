@@ -1,9 +1,9 @@
 use crate::Result;
-use crate::project::Project;
+use crate::project::{Build, Project};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::fs;
-use std::io::{Read, Write};
+use std::io::{Read, Seek, SeekFrom, Write};
 use std::net::TcpStream;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant, SystemTime};
@@ -119,11 +119,28 @@ fn snapshot(root: &Path) -> BTreeMap<PathBuf, SystemTime> {
     out
 }
 
+fn tail(path: &Path, offset: u64) -> u64 {
+    let Ok(mut file) = fs::File::open(path) else {
+        return offset;
+    };
+    let len = file.metadata().map_or(0, |m| m.len());
+    let from = if len < offset { 0 } else { offset };
+    if len == from || file.seek(SeekFrom::Start(from)).is_err() {
+        return from;
+    }
+    let mut data = Vec::new();
+    if file.read_to_end(&mut data).is_err() {
+        return from;
+    }
+    print!("{}", String::from_utf8_lossy(&data));
+    from + data.len() as u64
+}
+
 pub fn run(cwd: &Path, endpoint_file: Option<PathBuf>) -> Result {
     let ep = endpoint(endpoint_file)?;
     let mut project = Project::open(cwd)?;
     let id = project.manifest.id.clone();
-    let stage = project.stage(true)?;
+    let stage = project.stage(Build::Dev)?;
     let linked = call(&ep, "link", json!({ "id": id, "root": stage }))?;
     project.prune_stages(&stage);
     let mut log = linked["log"].as_str().map(PathBuf::from);
@@ -144,7 +161,7 @@ pub fn run(cwd: &Path, endpoint_file: Option<PathBuf>) -> Result {
             if let Err(e) = call(&ep, "heartbeat", json!({ "id": id })) {
                 eprintln!("{e}; linking again");
                 match project
-                    .stage(true)
+                    .stage(Build::Dev)
                     .and_then(|stage| call(&ep, "link", json!({ "id": id, "root": stage })))
                 {
                     Ok(value) => {
@@ -157,17 +174,8 @@ pub fn run(cwd: &Path, endpoint_file: Option<PathBuf>) -> Result {
                 }
             }
         }
-        if let Some(path) = &log
-            && let Ok(data) = fs::read(path)
-        {
-            let len = data.len() as u64;
-            if len < offset {
-                offset = 0;
-            }
-            if len > offset {
-                print!("{}", String::from_utf8_lossy(&data[offset as usize..]));
-                offset = len;
-            }
+        if let Some(path) = &log {
+            offset = tail(path, offset);
         }
         let now = snapshot(&project.root);
         if now == before {
@@ -175,7 +183,7 @@ pub fn run(cwd: &Path, endpoint_file: Option<PathBuf>) -> Result {
         }
         std::thread::sleep(Duration::from_millis(150));
         match Project::open(cwd).and_then(|next| {
-            let stage = next.stage(true)?;
+            let stage = next.stage(Build::Dev)?;
             call(
                 &ep,
                 "link",

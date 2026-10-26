@@ -1,6 +1,6 @@
 //! What a plugin can ask of the app.
 
-use crate::event::{Controller, Device, Event, Position};
+use crate::event::{Controller, Device, Event, Navigation, Position};
 use crate::{Result, runtime};
 use serde::Serialize;
 use serde_json::{Map, Value, json};
@@ -55,6 +55,9 @@ pub struct Request {
     /// Milliseconds; the host clamps it to 100..=30000 and uses 5000 by default.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub timeout: Option<u32>,
+    /// The response body arrives base64-encoded, for images and other binary data.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub binary: bool,
 }
 
 impl Request {
@@ -83,6 +86,11 @@ impl Request {
         self.timeout = Some(ms);
         self
     }
+
+    pub fn binary(mut self) -> Self {
+        self.binary = true;
+        self
+    }
 }
 
 /// A visible action instance, as the host announced it with `appear`.
@@ -109,6 +117,7 @@ pub struct Host {
     language: String,
     device: Option<Device>,
     globals: Value,
+    navigation: Option<Navigation>,
     keys: BTreeMap<String, KeyInfo>,
 }
 
@@ -126,6 +135,7 @@ impl Host {
             Event::Device(device) => self.device = device.clone(),
             Event::Language(language) => self.language = language.clone(),
             Event::Globals(settings) => self.globals = settings.clone(),
+            Event::Navigation(navigation) => self.navigation = Some(navigation.clone()),
             Event::Appear(key) => {
                 self.keys.insert(
                     key.context.clone(),
@@ -163,6 +173,11 @@ impl Host {
 
     pub fn device(&self) -> Option<&Device> {
         self.device.as_ref()
+    }
+
+    /// The profile and page shown on the deck.
+    pub fn navigation(&self) -> Option<&Navigation> {
+        self.navigation.as_ref()
     }
 
     /// Plugin-wide settings as last saved or received.
@@ -298,6 +313,16 @@ impl Commands {
         self.send(json!({ "type": "appStatus", "id": id, "app": app }))
     }
 
+    /// Reports the application's status now and whenever it starts or quits, as
+    /// `Event::AppStatus` with this id, until [`app_unwatch`](Self::app_unwatch).
+    pub fn app_watch(&self, id: &str, app: &str) -> Result {
+        self.send(json!({ "type": "appWatch", "id": id, "app": app }))
+    }
+
+    pub fn app_unwatch(&self, id: &str) -> Result {
+        self.send(json!({ "type": "appUnwatch", "id": id }))
+    }
+
     /// Starts a declared application; `args` fill its `{0}`..`{9}`: `Event::Done`.
     pub fn app_launch(&self, id: &str, app: &str, args: &[u64]) -> Result {
         self.send(json!({ "type": "appLaunch", "id": id, "app": app, "args": args }))
@@ -311,6 +336,36 @@ impl Commands {
     /// Writes text to the clipboard: `Event::Done`.
     pub fn clipboard(&self, id: &str, text: &str) -> Result {
         self.send(json!({ "type": "clipboard", "id": id, "text": text }))
+    }
+
+    /// Presses and releases a combination such as `"Ctrl + Shift + M"`: `Event::Done`.
+    pub fn hotkey(&self, id: &str, keys: &str) -> Result {
+        self.send(json!({ "type": "hotkey", "id": id, "keys": keys, "mode": "press" }))
+    }
+
+    /// Holds a combination until [`key_up`](Self::key_up); the host releases
+    /// held keys when the plugin stops: `Event::Done`.
+    pub fn key_down(&self, id: &str, keys: &str) -> Result {
+        self.send(json!({ "type": "hotkey", "id": id, "keys": keys, "mode": "down" }))
+    }
+
+    pub fn key_up(&self, id: &str, keys: &str) -> Result {
+        self.send(json!({ "type": "hotkey", "id": id, "keys": keys, "mode": "up" }))
+    }
+
+    /// Types text into the focused application: `Event::Done`.
+    pub fn type_text(&self, id: &str, text: &str) -> Result {
+        self.send(json!({ "type": "typeText", "id": id, "text": text }))
+    }
+
+    /// Shows a profile, found by name or id, at `page` (the first page when `None`).
+    pub fn switch_profile(&self, profile: &str, page: Option<u32>) -> Result {
+        self.send(json!({ "type": "switchProfile", "profile": profile, "page": page }))
+    }
+
+    /// Shows a page of the current profile, counting from 0.
+    pub fn switch_page(&self, page: u32) -> Result {
+        self.send(json!({ "type": "switchPage", "page": page }))
     }
 }
 

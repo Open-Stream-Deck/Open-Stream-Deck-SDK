@@ -134,6 +134,21 @@ impl AppStatus {
     }
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Deserialize)]
+pub struct ProfileInfo {
+    pub id: String,
+    pub name: String,
+}
+
+/// What the deck shows.
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct Navigation {
+    pub profile: ProfileInfo,
+    /// Counting from 0.
+    pub page: u32,
+    pub pages: u32,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub enum Event {
     Init(Init),
@@ -155,6 +170,10 @@ pub enum Event {
     Settings(KeyEvent),
     /// Plugin-wide settings changed outside the plugin.
     Globals(Value),
+    /// After `Init` and whenever the deck shows another profile or page.
+    Navigation(Navigation),
+    /// The computer woke up from sleep.
+    SystemWake,
     InspectorOpen(KeyEvent),
     InspectorClose(KeyEvent),
     InspectorMessage(KeyEvent),
@@ -181,7 +200,7 @@ pub enum Event {
         id: String,
         status: AppStatus,
     },
-    /// Result of `app_launch`, `app_quit` or `clipboard`.
+    /// Result of `app_launch`, `app_quit`, `clipboard`, keyboard commands.
     Done {
         id: String,
         result: Result<(), String>,
@@ -247,6 +266,9 @@ struct Raw {
     plugin: PluginInfo,
     app: AppInfo,
     globals: Value,
+    profile: ProfileInfo,
+    page: u32,
+    pages: u32,
 }
 
 pub(crate) fn parse(value: Value) -> (Event, u64) {
@@ -286,6 +308,12 @@ pub(crate) fn parse(value: Value) -> (Event, u64) {
         "holdEnd" => Event::HoldEnd(key(raw)),
         "settings" => Event::Settings(key(raw)),
         "globals" => Event::Globals(raw.settings),
+        "navigation" => Event::Navigation(Navigation {
+            profile: raw.profile,
+            page: raw.page,
+            pages: raw.pages,
+        }),
+        "systemWake" => Event::SystemWake,
         "inspectorOpen" => Event::InspectorOpen(key(raw)),
         "inspectorClose" => Event::InspectorClose(key(raw)),
         "inspectorMessage" => Event::InspectorMessage(key(raw)),
@@ -368,6 +396,18 @@ mod tests {
             parse(json!({"type":"done","id":"c"})).0,
             Event::Done { result: Ok(()), .. }
         ));
+        let Event::Navigation(nav) = parse(
+            json!({"type":"navigation","profile":{"id":"p1","name":"Игры"},"page":1,"pages":3}),
+        )
+        .0
+        else {
+            panic!()
+        };
+        assert_eq!(
+            (nav.profile.name.as_str(), nav.page, nav.pages),
+            ("Игры", 1, 3)
+        );
+        assert_eq!(parse(json!({"type":"systemWake"})).0, Event::SystemWake);
     }
 
     #[test]

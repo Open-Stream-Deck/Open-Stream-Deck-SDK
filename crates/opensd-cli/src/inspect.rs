@@ -50,6 +50,12 @@ pub fn run(path: &Path) -> Result {
     if p.clipboard {
         println!("  write text to the clipboard");
     }
+    if p.keyboard {
+        println!("  press keys and type text");
+    }
+    if p.navigation {
+        println!("  switch profiles and pages");
+    }
     for target in &p.launch {
         let args = if target.args.is_empty() {
             String::new()

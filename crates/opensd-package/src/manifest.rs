@@ -99,9 +99,15 @@ pub struct Permissions {
     /// Writing text to the clipboard.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub clipboard: bool,
-    /// Applications the plugin may query, start and close.
+    /// Applications the plugin may query, watch, start and close.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub launch: Vec<LaunchTarget>,
+    /// Pressing keys and typing text in the focused application.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub keyboard: bool,
+    /// Switching the deck's profile and page.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub navigation: bool,
 }
 
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
@@ -522,6 +528,8 @@ impl Permissions {
             && self.network.is_empty()
             && !self.clipboard
             && self.launch.is_empty()
+            && !self.keyboard
+            && !self.navigation
     }
 
     /// Whether `port` lies in a declared loopback range.
@@ -854,6 +862,16 @@ mod tests {
         let before = m.permissions_digest();
         m.permissions.clipboard = true;
         assert_ne!(before, m.permissions_digest());
+        let before = m.permissions_digest();
+        m.permissions.keyboard = true;
+        assert_ne!(before, m.permissions_digest());
+        assert!(
+            !Permissions {
+                navigation: true,
+                ..Default::default()
+            }
+            .is_empty()
+        );
         m.permissions.loopback = vec!["80".into()];
         assert!(m.validate().is_err());
         for bad in ["{x}", "{10}", "a}", "{0"] {
