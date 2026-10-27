@@ -1,0 +1,26 @@
+sdk = 1
+id = "dev.opensd.uikit"
+name = "UI Kit"
+version = "1.0.0"
+author = "Open Stream Deck"
+description = "Все компоненты UI кита на странице кнопки и в окне плагина"
+icon = "assets/icon.svg"
+
+[runtime]
+type = "js"
+main = "plugin.js"
+
+[ui]
+inspector = "ui/inspector.html"
+settings = "ui/settings.html"
+
+[[actions]]
+id = "dev.opensd.uikit.demo"
+name = "UI Kit"
+description = "Страница настроек со всеми компонентами"
+icon = "assets/key.svg"
+controllers = ["key"]
+settings = { name = "UI", count = 1, note = "", mode = "auto", enabled = true, brightness = 60, size = "m", align = "bottom", color = "#0a84ff" }
+
+[[actions.states]]
+image = "assets/key.svg"

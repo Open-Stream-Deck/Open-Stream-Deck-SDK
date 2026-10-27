@@ -34,6 +34,10 @@ declare const opensd: {
   openSettings(): void;
   /** Opens an https:// link in the browser. */
   openUrl(url: string): void;
+  /** Shows a short notice at the bottom of the page, styled like the app's own. */
+  toast(text: string): void;
+  /** Binds `data-setting` and `data-global` fields added after load. */
+  bind(root?: ParentNode): void;
   on(type: "message", fn: (payload: opensdInspector.Json) => void): void;
   on(type: "settings" | "globals", fn: (settings: opensdInspector.JsonObject) => void): void;
   on(type: "theme", fn: (theme: "dark" | "light") => void): void;

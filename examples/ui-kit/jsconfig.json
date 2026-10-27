@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "WebWorker"],
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["plugin.js", "../../crates/opensd-cli/types/opensd.d.ts"]
+}

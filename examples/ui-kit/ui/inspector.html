@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>UI Kit</title>
+  <link rel="stylesheet" href="/_opensd/inspector.css">
+  <script src="/_opensd/inspector.js"></script>
+</head>
+<body>
+  <section>
+    <h1>UI Kit</h1>
+    <p>Страница собрана только из стилей <code>/_opensd/inspector.css</code>. Своего CSS здесь нет.</p>
+    <span class="status" id="status"><span class="status__dot"></span><span>Подключение</span></span>
+  </section>
+
+  <section>
+    <h2>Поля</h2>
+    <label>Подпись <input data-setting="name" placeholder="Текст на кнопке"></label>
+    <label>Число <input type="number" data-setting="count" min="1" max="99"></label>
+    <label>Заметка <textarea data-setting="note" rows="3" placeholder="Несколько строк"></textarea></label>
+    <label>
+      Режим
+      <select data-setting="mode">
+        <option value="auto">Автоматически</option>
+        <option value="manual">Вручную</option>
+        <option value="off">Выключено</option>
+      </select>
+    </label>
+    <p class="hint">Подпись к группе полей: мелкий приглушённый текст.</p>
+  </section>
+
+  <section>
+    <h2>Переключатели</h2>
+    <label>Показывать подпись <input type="checkbox" data-setting="enabled"></label>
+    <div class="field-row">
+      <span class="field-row__label">Яркость</span>
+      <div class="slider">
+        <input type="range" min="0" max="100" data-setting="brightness" data-unit="%">
+        <span class="slider__value"></span>
+      </div>
+    </div>
+    <div class="field-row">
+      <span class="field-row__label">Размер</span>
+      <div class="segmented">
+        <label class="segmented__item"><input type="radio" name="size" value="s" data-setting="size">S</label>
+        <label class="segmented__item"><input type="radio" name="size" value="m" data-setting="size">M</label>
+        <label class="segmented__item"><input type="radio" name="size" value="l" data-setting="size">L</label>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Выбор</h2>
+    <div class="field">
+      Положение
+      <div class="chip-group">
+        <label class="chip"><input type="radio" name="align" value="top" data-setting="align">Верх</label>
+        <label class="chip"><input type="radio" name="align" value="middle" data-setting="align">Центр</label>
+        <label class="chip"><input type="radio" name="align" value="bottom" data-setting="align">Низ</label>
+      </div>
+    </div>
+    <div class="field">
+      Цвет
+      <div class="cluster">
+        <div class="swatches">
+          <label class="swatch" style="--swatch: #ffffff"><input type="radio" name="color" value="#ffffff" data-setting="color"></label>
+          <label class="swatch" style="--swatch: #ff453a"><input type="radio" name="color" value="#ff453a" data-setting="color"></label>
+          <label class="swatch" style="--swatch: #ff9f0a"><input type="radio" name="color" value="#ff9f0a" data-setting="color"></label>
+          <label class="swatch" style="--swatch: #30d158"><input type="radio" name="color" value="#30d158" data-setting="color"></label>
+          <label class="swatch" style="--swatch: #0a84ff"><input type="radio" name="color" value="#0a84ff" data-setting="color"></label>
+          <label class="swatch" style="--swatch: #bf5af2"><input type="radio" name="color" value="#bf5af2" data-setting="color"></label>
+        </div>
+        <input type="color" data-setting="color" data-tip="Свой цвет">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Кнопки</h2>
+    <div class="row">
+      <button class="button button--primary" id="ping">Спросить плагин</button>
+      <button class="button" id="toast">Тост</button>
+    </div>
+    <div class="row" style="margin-top: 8px">
+      <button class="button button--danger" id="confirm">Сбросить</button>
+      <button class="button" disabled>Недоступно</button>
+      <button class="button" data-tip="Кнопка в процессе"><span class="spinner"></span>Загрузка</button>
+    </div>
+    <div class="cluster" style="margin-top: 8px">
+      <button class="icon-button" data-tip="Добавить" aria-label="Добавить">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+      </button>
+      <button class="icon-button icon-button--danger" data-tip="Удалить" aria-label="Удалить">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/></svg>
+      </button>
+      <button class="link-button" id="window">Окно плагина</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Метки и текст</h2>
+    <div class="cluster">
+      <span class="badge">Новое</span>
+      <span class="badge badge--success">Готово</span>
+      <span class="badge badge--warning">Внимание</span>
+      <span class="badge badge--danger">Ошибка</span>
+    </div>
+    <p style="margin-top: 10px">Сочетание <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>M</kbd>, код <code>opensd.toast()</code>, <a href="#" id="link">ссылка</a>.</p>
+    <div class="cluster" style="gap: 16px">
+      <span class="status"><span class="status__dot"></span>В сети</span>
+      <span class="status status--busy"><span class="status__dot"></span>Занят</span>
+      <span class="status status--error"><span class="status__dot"></span>Ошибка</span>
+      <span class="status status--off"><span class="status__dot"></span>Выкл</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Блоки</h2>
+    <div class="card">
+      <h3>Карточка</h3>
+      <p>Поднятая поверхность для группы настроек или статуса.</p>
+      <ul class="menu">
+        <li><button class="menu__item menu__item--active">Первый пункт <span class="menu__hint">1</span></button></li>
+        <li><button class="menu__item">Второй пункт <span class="menu__hint">2</span></button></li>
+      </ul>
+    </div>
+    <hr>
+    <button class="dropzone" id="drop">
+      <span class="dropzone__text">Перетащите файл</span>
+      <span class="dropzone__hint">или нажмите, чтобы выбрать</span>
+    </button>
+  </section>
+
+  <div class="modal-layer" id="dialog" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal confirm" role="dialog" aria-modal="true">
+      <div class="confirm__icon">
+        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/></svg>
+      </div>
+      <h2 class="confirm__title">Сбросить настройки?</h2>
+      <p class="confirm__text">Кнопка вернётся к значениям из манифеста.</p>
+      <div class="confirm__actions">
+        <button class="button" data-close>Отмена</button>
+        <button class="button button--danger-solid" id="reset">Сбросить</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const dialog = $("dialog");
+
+    const describe = () => {
+      $("status").lastElementChild.textContent = `${opensd.language}, тема ${opensd.theme}`;
+    };
+    opensd.ready.then(describe);
+    opensd.on("theme", describe);
+    opensd.on("message", (reply) => opensd.toast(`Плагин ответил в ${reply.at}`));
+
+    $("ping").onclick = () => opensd.send({ ping: true });
+    $("toast").onclick = () => opensd.toast("Настройки сохраняются сами");
+    $("window").onclick = () => opensd.openSettings();
+    $("link").onclick = (e) => {
+      e.preventDefault();
+      opensd.openUrl("https://wiki.opensd.dev/docs/sdk/ui");
+    };
+    $("drop").onclick = () => opensd.toast("Файл просите у плагина: у страницы нет доступа к диску");
+    $("confirm").onclick = () => (dialog.hidden = false);
+    dialog.querySelectorAll("[data-close]").forEach((el) => (el.onclick = () => (dialog.hidden = true)));
+    $("reset").onclick = () => {
+      opensd.saveSettings({ name: "UI", count: 1, note: "", mode: "auto", enabled: true, brightness: 60, size: "m", align: "bottom", color: "#0a84ff" });
+      dialog.hidden = true;
+      opensd.toast("Сброшено");
+    };
+  </script>
+</body>
+</html>

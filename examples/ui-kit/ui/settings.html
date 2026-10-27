@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>UI Kit</title>
+  <link rel="stylesheet" href="/_opensd/inspector.css">
+  <script src="/_opensd/inspector.js"></script>
+</head>
+<body>
+  <section>
+    <h1>Окно плагина</h1>
+    <p>Общие настройки плагина. Поля с <code>data-global</code> сохраняются для всех кнопок сразу.</p>
+  </section>
+
+  <section class="card">
+    <label>Сервер <input data-global="server" placeholder="http://127.0.0.1:8080" spellcheck="false"></label>
+    <label>Токен <input type="password" data-global="token" placeholder="Необязательно"></label>
+    <label>Подробный журнал <input type="checkbox" data-global="verbose"></label>
+    <div class="cluster">
+      <button class="button button--primary" id="check">Проверить</button>
+      <span class="status status--off" id="status"><span class="status__dot"></span><span>Не проверено</span></span>
+    </div>
+  </section>
+
+  <script>
+    const status = document.getElementById("status");
+
+    document.getElementById("check").onclick = () => {
+      status.className = "status status--busy";
+      status.lastElementChild.textContent = "Проверка";
+      opensd.send({ check: opensd.globals.server || null });
+    };
+    opensd.on("message", (reply) => {
+      status.className = "status";
+      status.lastElementChild.textContent = `Плагин ответил в ${reply.at}`;
+    });
+  </script>
+</body>
+</html>
