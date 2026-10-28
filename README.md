@@ -1,3 +1,5 @@
+![Open Stream Deck SDK](.github/cover.png)
+
 # Open Stream Deck SDK
 
 SDK для плагинов Open Stream Deck. Плагин пишется на Rust, JavaScript, TypeScript или любом языке, который собирается в WebAssembly, и распространяется одним файлом `.opensd`.
