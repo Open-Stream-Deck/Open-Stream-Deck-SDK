@@ -184,7 +184,8 @@ mod tests {
             project.check().unwrap();
         }
         let cargo = fs::read_to_string(root.join("demo-rust/Cargo.toml")).unwrap();
-        assert!(cargo.contains("opensd = \"1.1\""), "{cargo}");
+        let minor = env!("CARGO_PKG_VERSION").rsplit_once('.').unwrap().0;
+        assert!(cargo.contains(&format!("opensd = \"{minor}\"")), "{cargo}");
         let package = fs::read_to_string(root.join("demo-ts/package.json")).unwrap();
         assert!(package.contains("\"name\": \"demo-ts\""), "{package}");
         fs::remove_dir_all(root).unwrap();

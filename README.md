@@ -103,7 +103,7 @@ opensd::export!(Hello);
 - Реагировать на нажатия, отпускания, короткое и долгое нажатие, удержание с повтором. Жесты считает хост по порогам из манифеста.
 - Менять подпись со стилем, картинку и состояние кнопки, ставить отметку `ok` или `alert`.
 - Хранить настройки каждой кнопки и общие настройки плагина. Простые формы настроек описываются полями в манифесте, и приложение рисует их само.
-- Показывать свою страницу настроек кнопки и отдельное окно настроек плагина на HTML, собранные из UI кита приложения.
+- Показывать свою страницу настроек кнопки и отдельное окно настроек плагина на HTML, собранные из UI кита SDK в дизайне приложения.
 - Работать с сетью, локальными программами, буфером обмена и запуском приложений через разрешения, которые подтверждает пользователь.
 
 ## Структура
@@ -112,6 +112,7 @@ opensd::export!(Hello);
 | --- | --- |
 | `crates/opensd` | Rust SDK для плагинов, крейт [`opensd`](https://crates.io/crates/opensd) |
 | `crates/opensd-package` | Формат `.opensd`: манифест, проверка, упаковка. Общий для CLI и приложения |
+| `crates/opensd-ui` | UI кит и мост для HTML-страниц плагина, приложение отдаёт его по `/_opensd/` |
 | `crates/opensd-cli` | CLI `opensd`, шаблоны проектов и типы JS API |
 | `npm/` | Пакеты `@opensd/cli` и `@opensd/create` для npm |
 | `examples/ui-kit` | Плагин со всеми компонентами UI кита |
@@ -127,7 +128,7 @@ opensd::export!(Hello);
 | [Rust](https://wiki.opensd.dev/docs/sdk/rust) | Плагин на Rust, крейт `opensd` |
 | [JavaScript и TypeScript](https://wiki.opensd.dev/docs/sdk/javascript) | Глобальный объект `opensd` |
 | [Настройки](https://wiki.opensd.dev/docs/sdk/settings) | Поля в манифесте, страница кнопки, окно плагина |
-| [UI кит](https://wiki.opensd.dev/docs/sdk/ui) | Компоненты приложения для страниц плагина, пример в `examples/ui-kit` |
+| [UI кит](https://wiki.opensd.dev/docs/sdk/ui) | Компоненты для страниц плагина в дизайне приложения, пример в `examples/ui-kit` |
 | [CLI](https://wiki.opensd.dev/docs/sdk/cli) | Команды `opensd` и режим разработчика |
 | [Манифест](https://wiki.opensd.dev/docs/sdk/manifest), [протокол](https://wiki.opensd.dev/docs/sdk/protocol), [пакет](https://wiki.opensd.dev/docs/sdk/package) | Справочник |
 | [Исполнение](https://wiki.opensd.dev/docs/sdk/runtime), [разрешения](https://wiki.opensd.dev/docs/sdk/permissions), [ABI](https://wiki.opensd.dev/docs/sdk/abi) | Песочница, лимиты, доступ к системе, WebAssembly для любого языка |

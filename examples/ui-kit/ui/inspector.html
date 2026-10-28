@@ -9,59 +9,101 @@
 <body>
   <section>
     <h1>UI Kit</h1>
-    <p>Страница собрана только из стилей <code>/_opensd/inspector.css</code>. Своего CSS здесь нет.</p>
-    <span class="status" id="status"><span class="status__dot"></span><span>Подключение</span></span>
+    <p>Страница собрана только из <code>/_opensd/inspector.css</code> и <code>/_opensd/inspector.js</code>. Своего CSS здесь нет.</p>
+    <span class="status" id="status">Подключение</span>
   </section>
 
-  <section>
-    <h2>Поля</h2>
-    <label>Подпись <input data-setting="name" placeholder="Текст на кнопке"></label>
-    <label>Число <input type="number" data-setting="count" min="1" max="99"></label>
-    <label>Заметка <textarea data-setting="note" rows="3" placeholder="Несколько строк"></textarea></label>
-    <label>
-      Режим
-      <select data-setting="mode">
-        <option value="auto">Автоматически</option>
-        <option value="manual">Вручную</option>
-        <option value="off">Выключено</option>
-      </select>
-    </label>
-    <p class="hint">Подпись к группе полей: мелкий приглушённый текст.</p>
-  </section>
+  <div class="tabs">
+    <div class="tabs__list">
+      <button class="tabs__tab" data-tab="fields">Поля</button>
+      <button class="tabs__tab" data-tab="choice">Выбор</button>
+      <button class="tabs__tab" data-tab="actions">Кнопки</button>
+      <button class="tabs__tab" data-tab="content">Блоки</button>
+    </div>
 
-  <section>
-    <h2>Переключатели</h2>
-    <label>Показывать подпись <input type="checkbox" data-setting="enabled"></label>
-    <div class="field-row">
-      <span class="field-row__label">Яркость</span>
-      <div class="slider">
-        <input type="range" min="0" max="100" data-setting="brightness" data-unit="%">
-        <span class="slider__value"></span>
+    <div class="tabs__panel" data-tab="fields">
+      <label>Подпись <input data-setting="name" placeholder="Текст на кнопке"></label>
+      <label>Заметка <textarea data-setting="note" rows="3" placeholder="Несколько строк"></textarea></label>
+      <label>
+        Режим
+        <select data-setting="mode">
+          <option value="auto">Автоматически</option>
+          <option value="manual">Вручную</option>
+          <optgroup label="Дополнительно">
+            <option value="schedule">По расписанию</option>
+            <option value="off">Выключено</option>
+            <option value="beta" disabled>Скоро</option>
+          </optgroup>
+        </select>
+      </label>
+      <label>Количество <span class="stepper"><input type="number" data-setting="count" min="1" max="99"></span></label>
+      <label>Горячая клавиша <input data-hotkey data-setting="hotkey"></label>
+      <label>
+        Адрес
+        <span class="input-group">
+          <input type="url" data-global="server" placeholder="http://127.0.0.1:8080" spellcheck="false">
+          <button class="button" id="check">Проверить</button>
+        </span>
+      </label>
+      <label>
+        Токен
+        <input type="password" placeholder="Неверное значение" aria-invalid="true">
+        <span class="hint hint--error">Так выглядит ошибка в поле.</span>
+      </label>
+      <hr>
+      <label>Показывать подпись <input type="checkbox" data-setting="enabled"></label>
+      <div class="field-row">
+        <span class="field-row__label">Яркость</span>
+        <div class="slider">
+          <input type="range" min="0" max="100" data-setting="brightness" data-unit="%">
+          <span class="slider__value"></span>
+        </div>
+      </div>
+      <div class="field-row">
+        <span class="field-row__label">Скорость</span>
+        <select data-setting="speed">
+          <option value="slow" data-hint="0,5×">Медленно</option>
+          <option value="normal" data-hint="1×">Обычно</option>
+          <option value="fast" data-hint="2×">Быстро</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <span class="field-row__label">Цвет фона</span>
+        <input type="color" data-setting="background" data-colors="">
       </div>
     </div>
-    <div class="field-row">
-      <span class="field-row__label">Размер</span>
-      <div class="segmented">
-        <label class="segmented__item"><input type="radio" name="size" value="s" data-setting="size">S</label>
-        <label class="segmented__item"><input type="radio" name="size" value="m" data-setting="size">M</label>
-        <label class="segmented__item"><input type="radio" name="size" value="l" data-setting="size">L</label>
-      </div>
-    </div>
-  </section>
 
-  <section>
-    <h2>Выбор</h2>
-    <div class="field">
-      Положение
-      <div class="chip-group">
-        <label class="chip"><input type="radio" name="align" value="top" data-setting="align">Верх</label>
-        <label class="chip"><input type="radio" name="align" value="middle" data-setting="align">Центр</label>
-        <label class="chip"><input type="radio" name="align" value="bottom" data-setting="align">Низ</label>
+    <div class="tabs__panel" data-tab="choice">
+      <div class="field">
+        Размер
+        <div class="segmented">
+          <label class="segmented__item"><input type="radio" name="size" value="s" data-setting="size">Мелко</label>
+          <label class="segmented__item"><input type="radio" name="size" value="m" data-setting="size">Средне</label>
+          <label class="segmented__item"><input type="radio" name="size" value="l" data-setting="size">Крупно</label>
+        </div>
       </div>
-    </div>
-    <div class="field">
-      Цвет
-      <div class="cluster">
+      <div class="field">
+        Положение, один вариант
+        <div class="chips">
+          <label class="chip"><input type="radio" name="align" value="top" data-setting="align">Верх</label>
+          <label class="chip"><input type="radio" name="align" value="middle" data-setting="align">Центр</label>
+          <label class="chip"><input type="radio" name="align" value="bottom" data-setting="align">Низ</label>
+        </div>
+      </div>
+      <div class="field">
+        Дни, несколько вариантов
+        <div class="chips">
+          <label class="chip"><input type="checkbox" value="mon" data-setting="days">Пн</label>
+          <label class="chip"><input type="checkbox" value="tue" data-setting="days">Вт</label>
+          <label class="chip"><input type="checkbox" value="wed" data-setting="days">Ср</label>
+          <label class="chip"><input type="checkbox" value="thu" data-setting="days">Чт</label>
+          <label class="chip"><input type="checkbox" value="fri" data-setting="days">Пт</label>
+          <label class="chip"><input type="checkbox" value="sat" data-setting="days">Сб</label>
+          <label class="chip"><input type="checkbox" value="sun" data-setting="days">Вс</label>
+        </div>
+      </div>
+      <div class="field">
+        Цвет
         <div class="swatches">
           <label class="swatch" style="--swatch: #ffffff"><input type="radio" name="color" value="#ffffff" data-setting="color"></label>
           <label class="swatch" style="--swatch: #ff453a"><input type="radio" name="color" value="#ff453a" data-setting="color"></label>
@@ -69,108 +111,196 @@
           <label class="swatch" style="--swatch: #30d158"><input type="radio" name="color" value="#30d158" data-setting="color"></label>
           <label class="swatch" style="--swatch: #0a84ff"><input type="radio" name="color" value="#0a84ff" data-setting="color"></label>
           <label class="swatch" style="--swatch: #bf5af2"><input type="radio" name="color" value="#bf5af2" data-setting="color"></label>
+          <label class="swatch swatch--custom" data-tip="Свой цвет"><input type="color" data-setting="color"></label>
         </div>
-        <input type="color" data-setting="color" data-tip="Свой цвет">
       </div>
+      <hr>
+      <label><input type="radio" name="source" value="file" data-setting="source"> Из файла</label>
+      <label><input type="radio" name="source" value="url" data-setting="source"> По ссылке</label>
+      <label><input type="checkbox" class="checkbox" data-setting="loop"> Повторять</label>
     </div>
-  </section>
 
-  <section>
-    <h2>Кнопки</h2>
-    <div class="row">
-      <button class="button button--primary" id="ping">Спросить плагин</button>
-      <button class="button" id="toast">Тост</button>
-    </div>
-    <div class="row" style="margin-top: 8px">
-      <button class="button button--danger" id="confirm">Сбросить</button>
-      <button class="button" disabled>Недоступно</button>
-      <button class="button" data-tip="Кнопка в процессе"><span class="spinner"></span>Загрузка</button>
-    </div>
-    <div class="cluster" style="margin-top: 8px">
-      <button class="icon-button" data-tip="Добавить" aria-label="Добавить">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
-      </button>
-      <button class="icon-button icon-button--danger" data-tip="Удалить" aria-label="Удалить">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/></svg>
-      </button>
-      <button class="link-button" id="window">Окно плагина</button>
-    </div>
-  </section>
-
-  <section>
-    <h2>Метки и текст</h2>
-    <div class="cluster">
-      <span class="badge">Новое</span>
-      <span class="badge badge--success">Готово</span>
-      <span class="badge badge--warning">Внимание</span>
-      <span class="badge badge--danger">Ошибка</span>
-    </div>
-    <p style="margin-top: 10px">Сочетание <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>M</kbd>, код <code>opensd.toast()</code>, <a href="#" id="link">ссылка</a>.</p>
-    <div class="cluster" style="gap: 16px">
-      <span class="status"><span class="status__dot"></span>В сети</span>
-      <span class="status status--busy"><span class="status__dot"></span>Занят</span>
-      <span class="status status--error"><span class="status__dot"></span>Ошибка</span>
-      <span class="status status--off"><span class="status__dot"></span>Выкл</span>
-    </div>
-  </section>
-
-  <section>
-    <h2>Блоки</h2>
-    <div class="card">
-      <h3>Карточка</h3>
-      <p>Поднятая поверхность для группы настроек или статуса.</p>
-      <ul class="menu">
-        <li><button class="menu__item menu__item--active">Первый пункт <span class="menu__hint">1</span></button></li>
-        <li><button class="menu__item">Второй пункт <span class="menu__hint">2</span></button></li>
-      </ul>
-    </div>
-    <hr>
-    <button class="dropzone" id="drop">
-      <span class="dropzone__text">Перетащите файл</span>
-      <span class="dropzone__hint">или нажмите, чтобы выбрать</span>
-    </button>
-  </section>
-
-  <div class="modal-layer" id="dialog" hidden>
-    <div class="modal-backdrop" data-close></div>
-    <div class="modal confirm" role="dialog" aria-modal="true">
-      <div class="confirm__icon">
-        <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/></svg>
+    <div class="tabs__panel" data-tab="actions">
+      <div class="grid">
+        <button class="button button--primary" id="ping">Спросить плагин</button>
+        <button class="button" id="toast">Тост</button>
+        <button class="button button--danger" id="reset">Сбросить</button>
+        <button class="button button--ghost" data-open="about">Диалог</button>
+        <button class="button" disabled>Недоступно</button>
+        <button class="button" id="busy">Загрузка</button>
       </div>
-      <h2 class="confirm__title">Сбросить настройки?</h2>
-      <p class="confirm__text">Кнопка вернётся к значениям из манифеста.</p>
-      <div class="confirm__actions">
-        <button class="button" data-close>Отмена</button>
-        <button class="button button--danger-solid" id="reset">Сбросить</button>
+      <div class="cluster" style="margin-top: 12px">
+        <button class="button button--small">Маленькая</button>
+        <button class="icon-button" data-tip="Добавить" aria-label="Добавить">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M8 3v10M3 8h10"/></svg>
+        </button>
+        <button class="icon-button icon-button--danger" data-tip="Удалить" aria-label="Удалить">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5h5.8l.6-8.5"/></svg>
+        </button>
+        <button class="icon-button icon-button--surface" data-tip="Обновить" aria-label="Обновить">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M13 8a5 5 0 1 1-1.5-3.5M13 3v3h-3"/></svg>
+        </button>
+        <span class="spacer"></span>
+        <button class="link" id="window">Окно плагина</button>
+      </div>
+      <hr>
+      <label class="dropzone">
+        <input type="file" id="file" accept="image/*">
+        <span>Перетащите картинку</span>
+        <span class="dropzone__hint">или нажмите, чтобы выбрать</span>
+      </label>
+      <img id="preview" alt="" hidden style="margin-top: 10px; border-radius: 10px">
+    </div>
+
+    <div class="tabs__panel" data-tab="content">
+      <div class="alert alert--info"><span class="alert__title">Подсказка</span>Нейтральное сообщение с заголовком.</div>
+      <div class="alert alert--success">Всё подключено.</div>
+      <div class="alert alert--warning">Ключ скоро истечёт.</div>
+      <div class="alert alert--danger"><span class="alert__title">Ошибка</span>Сервер не отвечает.</div>
+
+      <div class="cluster" style="margin: 14px 0">
+        <span class="badge">Новое</span>
+        <span class="badge badge--accent">Pro</span>
+        <span class="badge badge--info">Бета</span>
+        <span class="badge badge--success">Готово</span>
+        <span class="badge badge--warning">Внимание</span>
+        <span class="badge badge--danger">Ошибка</span>
+      </div>
+      <div class="cluster" style="gap: 16px; margin-bottom: 14px">
+        <span class="status">В сети</span>
+        <span class="status status--busy">Занят</span>
+        <span class="status status--error">Ошибка</span>
+        <span class="status status--off">Выкл</span>
+        <span class="spinner"></span>
+      </div>
+      <div class="stack stack--tight" style="margin-bottom: 14px">
+        <progress value="64" max="100"></progress>
+        <progress></progress>
+        <span class="skeleton" style="width: 60%"></span>
+      </div>
+
+      <div class="card">
+        <h3>Устройства</h3>
+        <ul class="list scroll" style="max-height: 170px">
+          <li>
+            <button class="list__item is-active">
+              <span class="list__icon">A</span>
+              <span class="list__text"><span class="list__title">Ajazz AKP153</span><span class="list__subtitle">USB, прошивка 2.1</span></span>
+              <span class="list__meta">15</span>
+            </button>
+          </li>
+          <li>
+            <button class="list__item">
+              <span class="list__icon">S</span>
+              <span class="list__text"><span class="list__title">Stream Dock 293</span><span class="list__subtitle">Не подключено</span></span>
+              <span class="list__meta">6</span>
+            </button>
+          </li>
+          <li>
+            <button class="list__item">
+              <span class="list__icon">M</span>
+              <span class="list__text"><span class="list__title">Mirabox N4</span><span class="list__subtitle">USB, прошивка 1.0</span></span>
+              <span class="list__meta">10</span>
+            </button>
+          </li>
+          <li>
+            <button class="list__item">
+              <span class="list__icon">E</span>
+              <span class="list__text"><span class="list__title">Elgato Stream Deck</span><span class="list__subtitle">Не подключено</span></span>
+              <span class="list__meta">15</span>
+            </button>
+          </li>
+          <li>
+            <button class="list__item">
+              <span class="list__icon">V</span>
+              <span class="list__text"><span class="list__title">Виртуальная панель</span><span class="list__subtitle">Окно на рабочем столе</span></span>
+              <span class="list__meta">32</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <details style="margin-top: 12px">
+        <summary>Подробности</summary>
+        <dl>
+          <dt>Версия</dt><dd id="version">-</dd>
+          <dt>Тема</dt><dd id="theme">-</dd>
+          <dt>Язык</dt><dd id="language">-</dd>
+        </dl>
+      </details>
+      <details>
+        <summary>Таблица и код</summary>
+        <table>
+          <tr><th>Событие</th><th>Время</th></tr>
+          <tr><td>tap</td><td>12 мс</td></tr>
+          <tr><td>longPress</td><td>600 мс</td></tr>
+        </table>
+        <pre><code>opensd.toast("Сохранено", "success");</code></pre>
+        <p>Сочетание <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>M</kbd>, <a href="#" id="link">ссылка</a>.</p>
+      </details>
+
+      <div class="empty">
+        <svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2.5" y="2.5" width="11" height="11" rx="3"/></svg>
+        <span class="empty__title">Пока пусто</span>
+        <span class="empty__text">Пустое состояние для списков без данных.</span>
       </div>
     </div>
   </div>
 
+  <dialog id="about">
+    <h2 class="dialog__title">Свой диалог</h2>
+    <p class="dialog__text">Любая разметка внутри <code>&lt;dialog&gt;</code>. Открывается через <code>data-open</code>, закрывается через <code>data-close</code>, Esc или клик мимо.</p>
+    <label>Название <input placeholder="Например, Студия"></label>
+    <div class="dialog__actions">
+      <button class="button" data-close>Закрыть</button>
+      <button class="button button--primary" data-close>Готово</button>
+    </div>
+  </dialog>
+
   <script>
     const $ = (id) => document.getElementById(id);
-    const dialog = $("dialog");
+    const defaults = { name: "UI", note: "", mode: "auto", count: 1, hotkey: "", enabled: true, brightness: 60, speed: "normal", background: "#1b1b1b", size: "m", align: "bottom", days: ["mon", "fri"], color: "#0a84ff", source: "file", loop: false };
 
-    const describe = () => {
-      $("status").lastElementChild.textContent = `${opensd.language}, тема ${opensd.theme}`;
+    const describe = (context) => {
+      $("status").textContent = `${opensd.language}, тема ${opensd.theme}`;
+      $("theme").textContent = opensd.theme;
+      $("language").textContent = opensd.language;
+      if (context) $("version").textContent = `${context.plugin.id} ${context.plugin.version}`;
     };
     opensd.ready.then(describe);
-    opensd.on("theme", describe);
-    opensd.on("message", (reply) => opensd.toast(`Плагин ответил в ${reply.at}`));
+    opensd.on("theme", () => describe());
+    opensd.on("message", (reply) => {
+      $("check").removeAttribute("aria-busy");
+      opensd.toast(`Плагин ответил в ${reply.at}`, "success");
+    });
 
     $("ping").onclick = () => opensd.send({ ping: true });
+    $("check").onclick = () => {
+      $("check").setAttribute("aria-busy", "true");
+      opensd.send({ check: opensd.globals.server || null });
+    };
     $("toast").onclick = () => opensd.toast("Настройки сохраняются сами");
+    $("busy").onclick = (e) => {
+      e.currentTarget.setAttribute("aria-busy", "true");
+      setTimeout(() => $("busy").removeAttribute("aria-busy"), 1500);
+    };
+    $("reset").onclick = async () => {
+      const ok = await opensd.confirm({ title: "Сбросить настройки?", text: "Кнопка вернётся к значениям по умолчанию.", confirm: "Сбросить", danger: true });
+      if (!ok) return;
+      opensd.saveSettings(defaults);
+      opensd.toast("Сброшено");
+    };
     $("window").onclick = () => opensd.openSettings();
     $("link").onclick = (e) => {
       e.preventDefault();
       opensd.openUrl("https://wiki.opensd.dev/docs/sdk/ui");
     };
-    $("drop").onclick = () => opensd.toast("Файл просите у плагина: у страницы нет доступа к диску");
-    $("confirm").onclick = () => (dialog.hidden = false);
-    dialog.querySelectorAll("[data-close]").forEach((el) => (el.onclick = () => (dialog.hidden = true)));
-    $("reset").onclick = () => {
-      opensd.saveSettings({ name: "UI", count: 1, note: "", mode: "auto", enabled: true, brightness: 60, size: "m", align: "bottom", color: "#0a84ff" });
-      dialog.hidden = true;
-      opensd.toast("Сброшено");
+    $("file").onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      $("preview").src = await opensd.readFile(file);
+      $("preview").hidden = false;
+      opensd.toast(file.name);
     };
   </script>
 </body>

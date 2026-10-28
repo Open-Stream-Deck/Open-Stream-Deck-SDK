@@ -152,7 +152,7 @@ dependencies = [
 
 [[package]]
 name = "opensd"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -160,7 +160,7 @@ dependencies = [
 
 [[package]]
 name = "opensd-cli"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "opensd-package",
  "serde",
@@ -170,13 +170,17 @@ dependencies = [
 
 [[package]]
 name = "opensd-package"
-version = "1.1.0"
+version = "1.2.0"
 dependencies = [
  "serde",
  "serde_json",
  "sha2",
  "zip",
 ]
+
+[[package]]
+name = "opensd-ui"
+version = "1.2.0"
 
 [[package]]
 name = "proc-macro2"

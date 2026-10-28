@@ -20,7 +20,7 @@ name = "UI Kit"
 description = "Страница настроек со всеми компонентами"
 icon = "assets/key.svg"
 controllers = ["key"]
-settings = { name = "UI", count = 1, note = "", mode = "auto", enabled = true, brightness = 60, size = "m", align = "bottom", color = "#0a84ff" }
+settings = { name = "UI", note = "", mode = "auto", count = 1, hotkey = "", enabled = true, brightness = 60, speed = "normal", background = "#1b1b1b", size = "m", align = "bottom", days = ["mon", "fri"], color = "#0a84ff", source = "file", loop = false }
 
 [[actions.states]]
 image = "assets/key.svg"

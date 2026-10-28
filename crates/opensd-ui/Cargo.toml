@@ -1,0 +1,14 @@
+[package]
+name = "opensd-ui"
+description = "UI кит и мост для HTML-страниц плагинов Open Stream Deck"
+readme = "README.md"
+keywords = ["opensd", "stream-deck", "plugin", "ui", "css"]
+categories = ["gui", "web-programming"]
+include = ["src", "assets", "README.md", "LICENSE-*"]
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license = "(MIT OR Apache-2.0) AND OFL-1.1"
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true

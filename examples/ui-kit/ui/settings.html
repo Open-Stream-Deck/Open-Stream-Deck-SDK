@@ -13,26 +13,37 @@
   </section>
 
   <section class="card">
-    <label>Сервер <input data-global="server" placeholder="http://127.0.0.1:8080" spellcheck="false"></label>
+    <label>Сервер <input type="url" data-global="server" placeholder="http://127.0.0.1:8080" spellcheck="false"></label>
     <label>Токен <input type="password" data-global="token" placeholder="Необязательно"></label>
+    <label>
+      Обновлять
+      <select data-global="interval">
+        <option value="1">Каждую минуту</option>
+        <option value="10">Каждые 10 минут</option>
+        <option value="60">Раз в час</option>
+      </select>
+    </label>
     <label>Подробный журнал <input type="checkbox" data-global="verbose"></label>
     <div class="cluster">
       <button class="button button--primary" id="check">Проверить</button>
-      <span class="status status--off" id="status"><span class="status__dot"></span><span>Не проверено</span></span>
+      <span class="status status--off" id="status">Не проверено</span>
     </div>
   </section>
 
   <script>
     const status = document.getElementById("status");
+    const check = document.getElementById("check");
 
-    document.getElementById("check").onclick = () => {
+    check.onclick = () => {
+      check.setAttribute("aria-busy", "true");
       status.className = "status status--busy";
-      status.lastElementChild.textContent = "Проверка";
+      status.textContent = "Проверка";
       opensd.send({ check: opensd.globals.server || null });
     };
     opensd.on("message", (reply) => {
+      check.removeAttribute("aria-busy");
       status.className = "status";
-      status.lastElementChild.textContent = `Плагин ответил в ${reply.at}`;
+      status.textContent = `Плагин ответил в ${reply.at}`;
     });
   </script>
 </body>
