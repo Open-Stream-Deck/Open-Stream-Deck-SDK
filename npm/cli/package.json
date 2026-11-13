@@ -1,6 +1,6 @@
 {
   "name": "@opensd/cli",
-  "version": "1.0.1",
+  "version": "1.3.0",
   "description": "Создание, сборка, проверка и упаковка плагинов Open Stream Deck",
   "keywords": ["opensd", "open-stream-deck", "stream-deck", "plugin", "macropad"],
   "homepage": "https://wiki.opensd.dev/docs/sdk",
@@ -20,11 +20,11 @@
     "node": ">=18"
   },
   "optionalDependencies": {
-    "@opensd/cli-darwin-arm64": "1.0.1",
-    "@opensd/cli-darwin-x64": "1.0.1",
-    "@opensd/cli-linux-arm64": "1.0.1",
-    "@opensd/cli-linux-x64": "1.0.1",
-    "@opensd/cli-win32-arm64": "1.0.1",
-    "@opensd/cli-win32-x64": "1.0.1"
+    "@opensd/cli-darwin-arm64": "1.3.0",
+    "@opensd/cli-darwin-x64": "1.3.0",
+    "@opensd/cli-linux-arm64": "1.3.0",
+    "@opensd/cli-linux-x64": "1.3.0",
+    "@opensd/cli-win32-arm64": "1.3.0",
+    "@opensd/cli-win32-x64": "1.3.0"
   }
 }

@@ -40,6 +40,10 @@ pub struct Manifest {
     pub package: Option<PackageOptions>,
     #[serde(default, skip_serializing_if = "Permissions::is_empty")]
     pub permissions: Permissions,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub targets: Vec<crate::ComponentTarget>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub components: Vec<crate::ExternalComponent>,
     pub actions: Vec<Action>,
 }
 
@@ -262,7 +266,6 @@ impl Manifest {
         Ok(manifest)
     }
 
-    /// Files the manifest refers to; each must be in the package.
     pub fn referenced_files(&self) -> Vec<&str> {
         let mut files = vec![self.runtime.main.as_str()];
         files.extend(self.icon.as_deref());
@@ -273,7 +276,16 @@ impl Manifest {
             files.extend(action.inspector.as_deref());
             files.extend(action.states.iter().filter_map(|s| s.image.as_deref()));
         }
+        files.extend(self.component_sources());
         files
+    }
+
+    pub fn component_sources(&self) -> impl Iterator<Item = &str> {
+        self.components
+            .iter()
+            .flat_map(|c| &c.variants)
+            .flat_map(|v| &v.files)
+            .map(|f| f.source.as_str())
     }
 
     /// Stable digest of the requested permissions; user consent is bound to it.
@@ -340,6 +352,13 @@ impl Manifest {
             for entry in include {
                 file("package.include", entry)?;
             }
+        }
+        crate::validate_components(&self.targets, &self.components)?;
+        if !self.components.is_empty() {
+            ensure!(
+                self.min_app.is_some(),
+                "External components require min_app"
+            );
         }
         self.permissions.validate()?;
         ensure!(

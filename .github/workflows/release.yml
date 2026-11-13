@@ -91,7 +91,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" dist/* install.sh install.ps1 \
-            --title "opensd ${{ needs.version.outputs.version }}" \
+            --title "Open Stream Deck SDK ${{ needs.version.outputs.version }}" \
             --notes-file notes.md \
             --verify-tag
 

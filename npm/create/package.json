@@ -1,6 +1,6 @@
 {
   "name": "@opensd/create",
-  "version": "1.0.1",
+  "version": "1.3.0",
   "description": "Создание плагина Open Stream Deck: npm create @opensd",
   "keywords": ["opensd", "open-stream-deck", "stream-deck", "plugin", "create"],
   "homepage": "https://wiki.opensd.dev/docs/sdk",
@@ -19,6 +19,6 @@
     "node": ">=18"
   },
   "dependencies": {
-    "@opensd/cli": "1.0.1"
+    "@opensd/cli": "1.3.0"
   }
 }

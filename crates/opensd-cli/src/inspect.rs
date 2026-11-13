@@ -29,17 +29,19 @@ pub fn run(path: &Path) -> Result {
                 u64::from(info.memory_max.unwrap_or(0)) * 64 / 1024
             );
         }
-        RuntimeKind::Js => println!(
-            "code      {} (JavaScript source, {})",
-            m.runtime.main,
-            human_size(main.len() as u64)
-        ),
+        RuntimeKind::Js => {
+            println!(
+                "code      {} (JavaScript source, {})",
+                m.runtime.main,
+                human_size(main.len() as u64)
+            )
+        }
     }
     println!();
     println!("Permissions");
     let p = &m.permissions;
     if p.is_empty() {
-        println!("  none: the plugin cannot reach anything outside its sandbox");
+        println!("  none: no runtime broker permissions requested");
     }
     for range in &p.loopback {
         println!("  connect to programs on this computer, ports {range}");
@@ -73,6 +75,25 @@ pub fn run(path: &Path) -> Result {
         }
     }
     println!("  digest {}", m.permissions_digest());
+    println!();
+    println!("External components");
+    for component in &m.components {
+        println!(
+            "  {} {}: {}",
+            component.name, component.version, component.description
+        );
+        for variant in &component.variants {
+            println!("    {:?}/{:?}", variant.os, variant.arch);
+            for file in &variant.files {
+                println!(
+                    "      {} -> {}{}",
+                    file.source,
+                    file.destination,
+                    if file.executable { " (executable)" } else { "" }
+                );
+            }
+        }
+    }
     println!();
     println!("Actions");
     for action in &m.actions {

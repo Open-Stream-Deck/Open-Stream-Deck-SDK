@@ -1,0 +1,101 @@
+sdk = 1
+id = "dev.opensd.components"
+name = "External Components Example"
+version = "1.0.0"
+author = "Open Stream Deck"
+description = "Two-file component installation example"
+min_app = "1.1.0"
+
+[runtime]
+type = "js"
+main = "plugin.js"
+
+[[targets]]
+id = "example-app"
+name = "Example App"
+selection = "directory"
+required_files = ["example-app.txt"]
+after_install = "Inspect the extensions directory. This example installs text files only."
+
+[[components]]
+id = "example-extension"
+name = "Example Extension"
+description = "Installs two text files into a user-selected application directory"
+version = "1.0.0"
+targets = ["example-app"]
+
+[[components.variants]]
+os = "windows"
+arch = "x86_64"
+
+[[components.variants.files]]
+source = "payload/extension.txt"
+destination = "extensions/opensd/extension.txt"
+
+[[components.variants.files]]
+source = "payload/settings.txt"
+destination = "extensions/opensd/settings.txt"
+
+[[components.variants]]
+os = "windows"
+arch = "aarch64"
+
+[[components.variants.files]]
+source = "payload/extension.txt"
+destination = "extensions/opensd/extension.txt"
+
+[[components.variants.files]]
+source = "payload/settings.txt"
+destination = "extensions/opensd/settings.txt"
+
+[[components.variants]]
+os = "linux"
+arch = "x86_64"
+
+[[components.variants.files]]
+source = "payload/extension.txt"
+destination = "extensions/opensd/extension.txt"
+
+[[components.variants.files]]
+source = "payload/settings.txt"
+destination = "extensions/opensd/settings.txt"
+
+[[components.variants]]
+os = "linux"
+arch = "aarch64"
+
+[[components.variants.files]]
+source = "payload/extension.txt"
+destination = "extensions/opensd/extension.txt"
+
+[[components.variants.files]]
+source = "payload/settings.txt"
+destination = "extensions/opensd/settings.txt"
+
+[[components.variants]]
+os = "macos"
+arch = "x86_64"
+
+[[components.variants.files]]
+source = "payload/extension.txt"
+destination = "extensions/opensd/extension.txt"
+
+[[components.variants.files]]
+source = "payload/settings.txt"
+destination = "extensions/opensd/settings.txt"
+
+[[components.variants]]
+os = "macos"
+arch = "aarch64"
+
+[[components.variants.files]]
+source = "payload/extension.txt"
+destination = "extensions/opensd/extension.txt"
+
+[[components.variants.files]]
+source = "payload/settings.txt"
+destination = "extensions/opensd/settings.txt"
+
+[[actions]]
+id = "dev.opensd.components.status"
+name = "Component Example"

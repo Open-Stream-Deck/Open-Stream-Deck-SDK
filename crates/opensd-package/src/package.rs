@@ -72,7 +72,11 @@ pub fn build(manifest: &Manifest, mut files: BTreeMap<String, Vec<u8>>) -> Resul
     check_files(&manifest, &files)?;
     let index = Index {
         format: EXTENSION.into(),
-        format_version: FORMAT_VERSION,
+        format_version: if manifest.components.is_empty() {
+            FORMAT_VERSION
+        } else {
+            crate::COMPONENT_FORMAT_VERSION
+        },
         id: manifest.id.clone(),
         version: manifest.version.clone(),
         files: files
@@ -157,7 +161,11 @@ pub fn verify(bytes: &[u8]) -> Result<Package> {
     let index: Index =
         serde_json::from_slice(&index_bytes).map_err(|e| Error(format!("{INDEX}: {e}")))?;
     ensure!(
-        index.format == EXTENSION && index.format_version == FORMAT_VERSION,
+        index.format == EXTENSION
+            && matches!(
+                index.format_version,
+                FORMAT_VERSION | crate::COMPONENT_FORMAT_VERSION
+            ),
         "Unsupported package format {} {}",
         index.format,
         index.format_version
@@ -189,6 +197,10 @@ pub fn verify(bytes: &[u8]) -> Result<Package> {
         manifest.id == index.id && manifest.version == index.version,
         "The manifest and the index name different plugins"
     );
+    ensure!(
+        manifest.components.is_empty() || index.format_version == crate::COMPONENT_FORMAT_VERSION,
+        "External components require package format 2"
+    );
     check_files(&manifest, &files)?;
     Ok(Package {
         manifest,
@@ -213,8 +225,8 @@ fn check_files(manifest: &Manifest, files: &BTreeMap<String, Vec<u8>>) -> Result
         ensure!(data.len() as u64 <= MAX_FILE_BYTES, "{name} exceeds 16 MiB");
         total += data.len() as u64;
         ensure!(
-            !native_executable(data),
-            "{name} is a native executable; packages carry no native code"
+            !native_executable(data) || manifest.component_sources().any(|path| path == name),
+            "{name} is a native executable; native files must be declared as external component sources"
         );
     }
     ensure!(total <= MAX_TOTAL_BYTES, "Package contents exceed 64 MiB");
@@ -373,6 +385,43 @@ mod tests {
             ),
             ("assets/icon.svg".to_string(), b"<svg/>".to_vec()),
         ])
+    }
+
+    #[test]
+    fn external_native_files_require_declaration_and_format_two() {
+        let mut value = serde_json::to_value(manifest()).unwrap();
+        value["min_app"] = "1.0.0".into();
+        value["targets"] = serde_json::json!([{
+            "id": "example", "name": "Example", "selection": "directory"
+        }]);
+        value["components"] = serde_json::json!([{
+            "id": "bridge", "name": "Bridge", "description": "Application integration",
+            "version": "1.0.0", "targets": ["example"],
+            "variants": [{ "os": "windows", "arch": "x86_64", "files": [
+                { "source": "native/bridge.dll", "destination": "plugins/bridge.dll" },
+                { "source": "native/support.dll", "destination": "plugins/support.dll" }
+            ] }]
+        }]);
+        let m: Manifest = serde_json::from_value(value.clone()).unwrap();
+        let mut f = files();
+        f.insert("native/bridge.dll".into(), b"MZ bridge".to_vec());
+        f.insert("native/support.dll".into(), b"MZ support".to_vec());
+        let bytes = build(&m, f.clone()).unwrap();
+        let package = verify(&bytes).unwrap();
+        assert_eq!(
+            package.index.format_version,
+            crate::COMPONENT_FORMAT_VERSION
+        );
+        assert_eq!(package.manifest.components, m.components);
+        f.insert("native/undeclared.dll".into(), b"MZ undeclared".to_vec());
+        assert!(build(&m, f).is_err());
+        value["components"][0]["variants"][0]["files"][0]["destination"] = "../outside.dll".into();
+        assert!(
+            serde_json::from_value::<Manifest>(value)
+                .unwrap()
+                .validate()
+                .is_err()
+        );
     }
 
     #[test]

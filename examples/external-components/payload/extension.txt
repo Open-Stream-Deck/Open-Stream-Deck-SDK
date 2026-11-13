@@ -1,0 +1,1 @@
+Open Stream Deck external component example, version 1.

@@ -176,6 +176,31 @@ impl Project {
                 );
             }
         }
+        for source in self.manifest.component_sources() {
+            let path = self.root.join(source);
+            for ancestor in path.ancestors().take_while(|p| *p != self.root) {
+                let metadata =
+                    fs::symlink_metadata(ancestor).map_err(|e| format!("{source}: {e}"))?;
+                #[cfg(windows)]
+                let linked = {
+                    use std::os::windows::fs::MetadataExt;
+                    metadata.file_attributes() & 0x400 != 0
+                };
+                #[cfg(not(windows))]
+                let linked = metadata.file_type().is_symlink();
+                if linked {
+                    return Err(format!("Component source uses a link: {source}"));
+                }
+            }
+            let resolved = path.canonicalize().map_err(|e| format!("{source}: {e}"))?;
+            if !plain(resolved).starts_with(&self.root) {
+                return Err(format!("Component source leaves the project: {source}"));
+            }
+            files.insert(
+                source.to_string(),
+                fs::read(&path).map_err(|e| format!("{source}: {e}"))?,
+            );
+        }
         Ok(files)
     }
 
