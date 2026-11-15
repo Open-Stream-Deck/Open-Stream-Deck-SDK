@@ -438,3 +438,31 @@ impl Key<'_> {
         self.command("toInspector", Self::fields(json!({ "payload": payload })))
     }
 }
+
+impl Commands {
+    pub fn discord_open(&self, id: &str, application: &str) -> Result {
+        self.send(json!({ "type": "discordOpen", "id": id, "application": application }))
+    }
+
+    pub fn discord_send(&self, id: &str, payload: &Value) -> Result {
+        self.send(json!({ "type": "discordSend", "id": id, "payload": payload }))
+    }
+
+    pub fn discord_close(&self, id: &str) -> Result {
+        self.send(json!({ "type": "discordClose", "id": id }))
+    }
+
+    pub fn widget_open(&self, id: &str, widget: &str, directory: &str) -> Result {
+        self.send(
+            json!({ "type": "widgetOpen", "id": id, "widget": widget, "directory": directory }),
+        )
+    }
+
+    pub fn widget_state(&self, id: &str, widget: &str, state: &Value) -> Result {
+        self.send(json!({ "type": "widgetState", "id": id, "widget": widget, "state": state }))
+    }
+
+    pub fn widget_close(&self, id: &str, widget: &str) -> Result {
+        self.send(json!({ "type": "widgetClose", "id": id, "widget": widget }))
+    }
+}

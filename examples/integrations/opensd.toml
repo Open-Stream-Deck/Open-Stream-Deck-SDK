@@ -1,0 +1,15 @@
+sdk = 1
+id = "com.example.integrations"
+name = "Integrations"
+version = "1.0.0"
+author = "Example"
+[runtime]
+type = "js"
+main = "plugin.js"
+[package]
+include = ["widget"]
+[permissions]
+widgets = true
+[[actions]]
+id = "com.example.integrations.counter"
+name = "Counter"

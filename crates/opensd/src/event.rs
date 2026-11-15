@@ -210,7 +210,8 @@ pub enum Event {
         id: String,
         message: String,
     },
-    /// An event this SDK version does not know yet.
+    Discord(Value),
+    Widget(Value),
     Other(Value),
 }
 
@@ -356,6 +357,8 @@ pub(crate) fn parse(value: Value) -> (Event, u64) {
             id: raw.id,
             message: raw.message,
         },
+        "discordOpen" | "discordReply" | "discordEvent" | "discordClose" => Event::Discord(value),
+        "widgetOpen" | "widgetMessage" => Event::Widget(value),
         _ => Event::Other(value),
     };
     (event, now)

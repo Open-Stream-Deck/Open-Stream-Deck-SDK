@@ -97,6 +97,10 @@ pub struct Permissions {
     /// Loopback TCP ports for the host broker: `"9222"` or `"9222-9322"`.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub loopback: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub discord: Vec<String>,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub widgets: bool,
     /// Origins the plugin may reach with fetch and WebSocket.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub network: Vec<String>,
@@ -543,7 +547,9 @@ impl Field {
 
 impl Permissions {
     pub fn is_empty(&self) -> bool {
-        self.loopback.is_empty()
+        !self.widgets
+            && self.discord.is_empty()
+            && self.loopback.is_empty()
             && self.network.is_empty()
             && !self.clipboard
             && self.launch.is_empty()
@@ -564,6 +570,17 @@ impl Permissions {
     }
 
     fn validate(&self) -> Result<()> {
+        ensure!(self.discord.len() <= 8, "At most 8 Discord application IDs");
+        let mut applications = BTreeSet::new();
+        for application in &self.discord {
+            ensure!(
+                application.len() >= 17
+                    && application.len() <= 20
+                    && application.bytes().all(|byte| byte.is_ascii_digit())
+                    && applications.insert(application),
+                "Invalid or duplicate Discord application ID {application}"
+            );
+        }
         ensure!(self.loopback.len() <= 16, "At most 16 loopback ranges");
         for range in &self.loopback {
             match parse_port_range(range) {
@@ -926,5 +943,28 @@ mod tests {
         assert!(valid_semver("1.0.0") && valid_semver("1.2.3-beta.1+build"));
         assert!(!valid_semver("1.0") && !valid_semver("01.0.0") && !valid_semver("1.0.0 "));
         assert!(semver_at_least("0.2.0", "0.1.9") && !semver_at_least("0.1.0", "0.2.0"));
+    }
+}
+
+#[cfg(test)]
+mod integration_permissions_tests {
+
+    #[test]
+    fn discord_and_widgets_require_new_consent_and_validate_applications() {
+        let mut manifest = super::tests::sample();
+        let original = manifest.permissions_digest();
+        manifest.permissions.widgets = true;
+        assert_ne!(original, manifest.permissions_digest());
+        let widgets = manifest.permissions_digest();
+        manifest.permissions.discord = vec!["1526130962553901066".into()];
+        assert_ne!(widgets, manifest.permissions_digest());
+        assert!(manifest.validate().is_ok());
+        manifest
+            .permissions
+            .discord
+            .push("1526130962553901066".into());
+        assert!(manifest.validate().is_err());
+        manifest.permissions.discord = vec!["not-an-application".into()];
+        assert!(manifest.validate().is_err());
     }
 }

@@ -172,6 +172,17 @@ declare const opensd: {
     /** Calls `fn` now and whenever the application starts or quits; returns a function that stops watching. */
     watch(app: string, fn: (status: opensd.AppStatus) => void): () => void;
   };
+  discord: {
+    connect(application: string, onEvent?: (event: opensd.JsonObject) => void): Promise<{
+      send(command: string, args?: opensd.JsonObject, event?: string): Promise<opensd.JsonObject>;
+      close(): Promise<void>;
+    }>;
+  };
+  widgets: {
+    open(instance: string, directory: string): Promise<string>;
+    setState(instance: string, state: opensd.Json): Promise<void>;
+    close(instance: string): Promise<void>;
+  };
   clipboard(text: string): Promise<void>;
   /** Needs [permissions] keyboard. Combinations look like `"Ctrl + Shift + M"`. */
   keyboard: {

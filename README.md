@@ -12,7 +12,7 @@ SDK для плагинов Open Stream Deck. Плагин пишется на R
 
 **Документация SDK: [wiki.opensd.dev/docs/sdk](https://wiki.opensd.dev/docs/sdk)**
 
-Версия SDK: `1.3.0`. Внешние компоненты требуют Open Stream Deck `1.1.0` или новее.
+Версия SDK: `1.4.0`. Внешние компоненты требуют Open Stream Deck `1.1.0` или новее.
 
 ## Принципы
 
@@ -149,12 +149,24 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo fmt --all --check
 ```
 
-## Лицензия
-
-На выбор: [MIT](LICENSE-MIT) или [Apache License 2.0](LICENSE-APACHE).
-
 ## Внешние компоненты
 
 SDK 1.3.0 и приложение 1.1.0 поддерживают DLL и наборы файлов для игр и программ. Нативные файлы разрешены только как объявленные источники компонентов. Приложение отдельно запрашивает согласие на установку за пределы песочницы. Установка и экспорт выбирают вариант для Windows, Linux или macOS и архитектуры x86_64 или aarch64. Автор предоставляет файлы под каждую заявленную платформу.
 
-Контракт: [внешние компоненты](crates/opensd-package/COMPONENTS.md). Безопасный пример с двумя текстовыми файлами: [examples/external-components](examples/external-components/README.md). Руководство автора: [вики](https://wiki.opensd.dev/docs/sdk/components).
+Контракт: [внешние компоненты](crates/opensd-package/COMPONENTS.md).
+
+Безопасный пример с двумя текстовыми файлами: [examples/external-components](examples/external-components/README.md).
+
+Руководство: [вики](https://wiki.opensd.dev/docs/sdk/components).
+
+## Discord RPC и веб-виджеты
+
+SDK 1.4.0 добавляет команды Rust и типы JS/TS для [Discord Rich Presence](https://wiki.opensd.dev/docs/sdk/discord) и [локальных веб-виджетов](https://wiki.opensd.dev/docs/sdk/widgets). Новые API требуют поддержки в приложении и разрешений `discord` или `widgets` в манифесте. Установка нового CLI сама по себе не обновляет приложение.
+
+Виджеты из пакета плагина открываются в OBS и браузере, получают состояние и отправляют сообщения обратно плагину.
+
+Пример: [examples/integrations](examples/integrations).
+
+## Лицензия
+
+На выбор: [MIT](LICENSE-MIT) или [Apache License 2.0](LICENSE-APACHE).

@@ -43,6 +43,12 @@ pub fn run(path: &Path) -> Result {
     if p.is_empty() {
         println!("  none: no runtime broker permissions requested");
     }
+    for application in &p.discord {
+        println!("  Discord Rich Presence for application {application}");
+    }
+    if p.widgets {
+        println!("  serve local web widgets for browsers and OBS");
+    }
     for range in &p.loopback {
         println!("  connect to programs on this computer, ports {range}");
     }
